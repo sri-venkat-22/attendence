@@ -22,6 +22,7 @@ response = 1
 while response is 1:
     n = int(input('Number of absenties : '))
     absenties = list(map(int,input("roll nos : ").split()))
+
     for rno in absenties:
         for i in range(2,r+1):
             if sheet.cell(row = i,column=1).value != rno:
