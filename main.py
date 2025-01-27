@@ -29,21 +29,26 @@ warnings = {
     4: "Warning! You can take only one more day leave for PYTHON class."
 }
 
-def savefile():
-    data.save(r'/Users/srivenkatreddy/Library/CloudStorage/OneDrive-Personal/attendence.xlsx')
-response = 1
+def save_file():
+    data.save(r'/Users/srivenkatreddy/Documents/attendence.xlsx')
+    print("Attendance data saved!!")
 
-subjects = {"jp":3,"dld":4,"dbms":5,"vegc":6}
+def send_mail(to_mail,subject,message):
+    try:
+        server = smtplib.SMTP('smtp@gmail.com',587)
+        server.starttls()
+        server.login(FROM_EMAIL,EMAIL_PASSWORD)
 
-while response is 1:
-    sub = input("Enter the subject :")
-    n = int(input('Number of absenties : '))
-    print("Enter the Rollno's of absenties")
-    absenties_roll_no = list(map(int,input("roll nos : ").split()))
+        email = MIMEMultipart()
+        email['From'] = FROM_EMAIL
+        email['T0'] = to_mail
+        email['Subject'] = subject
+        email.attach(MIMEText(message,'plain'))
 
-    for rno in absenties_roll_no:
-        for i in range(2,r+1):
-            if sheet.cell(row = i,column=subjects[sub]).value != rno:
-                print()
+        server.sendmail(FROM_EMAIL,to_mail,email.as_string())
+        server.quit()
+        print(f'Email sent to {to_mail} successfully')
+    except Exception as e:
+        print(f'Error sending Email to {to_mail} : {e}')
 
-    response = int(input('Entering the attendance ? 1 ---> yes 0 ---> no'))
+
