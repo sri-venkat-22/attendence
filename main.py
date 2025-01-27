@@ -15,7 +15,9 @@ c = sheet.max_column
 
 # list of students who need to be reminded of attendance and lack of attendance
 std_mail_id = []
-lack_attd = []
+lack_attd = ""
+l3 =[]
+
 
 FROM_EMAIL = os.getenv('FROM_EMAIL','srivenkatstock@gmail.com')
 EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD','Sri@196768')
@@ -51,4 +53,22 @@ def send_mail(to_mail,subject,message):
     except Exception as e:
         print(f'Error sending Email to {to_mail} : {e}')
 
+def check(no_of_days,row_num,subject_code):
+    global std_mail_id,lack_attd,l3
 
+    subject = {1:"ML",2:"DSA",3:"DBMS",4:"PYTHON"}.get(subject_code)
+
+    for i,days in enumerate(no_of_days):
+        if days==2:
+            email = sheet.cell(row=row_num[i],column=2).value
+            std_mail_id.append(email)
+            send_mail(email,"Attendence warning",warnings[subject_code])
+        elif days>2:
+            row_num = sheet.cell(row=row_num[i],column=1).value
+            lack_attd += f"roll_num"
+            l3.append(sheet.cell(row=row_num[i],column=2).value)
+    if lack_attd:
+        staff_message = f"The following students have lack of attendance in {subject}: {l2.strip()}"
+        send_mail(staff_mails[subject_code - 1], "Attendance Alert", staff_message)
+        l2 = ""  # Reset after processing
+        l3 = []
